@@ -79,5 +79,5 @@
     toastEl = toastNode;
   }
 
-  window.Achievements = { init, checkNew, unlocked, openModal, ACHIEVEMENTS };
+  window.Achievements = { init, checkNew, unlocked, openModal, ACHIEVEMENTS, toast };
 })();
