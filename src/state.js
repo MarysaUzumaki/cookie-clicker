@@ -48,6 +48,8 @@
       v += owned * b.cps * mult;
     });
     if (state.prestige > 0) v *= Math.pow(2, state.prestige);
+    const discovered = (state.discovered || []).length;
+    if (discovered > 0) v *= 1 + discovered * 0.001;
     return v;
   }
 
