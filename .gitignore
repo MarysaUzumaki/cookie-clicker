@@ -1,0 +1,12 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Python tooling (generator/dev scripts)
+__pycache__/
+*.pyc
+venv/
+.venv/
