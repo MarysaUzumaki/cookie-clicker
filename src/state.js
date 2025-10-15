@@ -88,6 +88,7 @@
       goldenCaught: state.goldenCaught,
       doubleCookies: state.doubleCookies,
       discovered: state.discovered.length,
+      prestige: state.prestige,
     };
   }
 
