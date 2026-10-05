@@ -7,34 +7,15 @@
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>/Users/twix/Desktop/petbot/cookie-clicker/scripts/daily_commit.sh</string>
-    </array>
-    <key>StartCalendarInterval</key>
-    <array>
-        <dict>
-            <key>Hour</key>
-            <integer>8</integer>
-            <key>Minute</key>
-            <integer>0</integer>
-        </dict>
-        <dict>
-            <key>Hour</key>
-            <integer>14</integer>
-            <key>Minute</key>
-            <integer>0</integer>
-        </dict>
-        <dict>
-            <key>Hour</key>
-            <integer>20</integer>
-            <key>Minute</key>
-            <integer>0</integer>
-        </dict>
+        <string>/Users/twix/cc-daily/scripts/daily_commit.sh</string>
     </array>
     <key>RunAtLoad</key>
     <false/>
+    <key>StartInterval</key>
+    <integer>3600</integer>
     <key>StandardOutPath</key>
-    <string>/Users/twix/Desktop/petbot/cookie-clicker/.daily.log</string>
+    <string>/Users/twix/cc-daily/.daily.log</string>
     <key>StandardErrorPath</key>
-    <string>/Users/twix/Desktop/petbot/cookie-clicker/.daily.log</string>
+    <string>/Users/twix/cc-daily/.daily.log</string>
 </dict>
 </plist>
