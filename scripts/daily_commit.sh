@@ -39,8 +39,13 @@ PY
 )
 
 WORKED=0
+# Даты всех коммитов читаем одним проходом: git --since/--until даёт заниженный
+# счёт на не-монотонной по датам истории (после бэкфилла он обрезает обход).
+git log --format=%cd --date=format:%Y-%m-%d > "$TMP/dates_all"
+
 for day in $DAYS; do
-    CNT=$(git rev-list --count HEAD --since="$day 00:00:00" --until="$day 23:59:59" 2>/dev/null || echo 0)
+    CNT=$(grep -cx "$day" "$TMP/dates_all" || true)
+    CNT=${CNT:-0}
     NEED=$((TARGET - CNT))
     if [ "$NEED" -le 0 ]; then
         echo "$(date +%F\ %T) SKIP $day: уже $CNT коммитов" >> "$LOG"
