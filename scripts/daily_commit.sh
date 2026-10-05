@@ -26,26 +26,15 @@ git fetch -q origin main 2>>"$LOG" || true
 git pull --rebase --autostash -q origin main 2>>"$LOG" || true
 
 TODAY=$(date +%Y-%m-%d)
-LAST=$(git log -1 --format=%ad --date=format:%Y-%m-%d 2>/dev/null || echo none)
 
-# Список дней к добору: от (последний коммит + 1) до сегодня, максимум 7
-DAYS=$(python3 - "$LAST" "$TODAY" "$MAX_BACKFILL_DAYS" <<'PY'
+# Дни к добору: окно в MAX_BACKFILL_DAYS+1 последних дней (включая сегодня).
+# Не опираемся на дату последнего коммита — один свежий «служебный» коммит
+# иначе замаскирует пропущенные дни. Полные дни отсеются счётчиком ниже.
+DAYS=$(python3 - "$TODAY" "$MAX_BACKFILL_DAYS" <<'PY'
 import sys, datetime as dt
-last, today, cap = sys.argv[1], sys.argv[2], int(sys.argv[3])
-if last == "none":
-    print(today); raise SystemExit
-try:
-    d = dt.date.fromisoformat(last) + dt.timedelta(days=1)
-except ValueError:
-    print(today); raise SystemExit
+today, cap = sys.argv[1], int(sys.argv[2])
 t = dt.date.fromisoformat(today)
-out = []
-while d <= t and len(out) < cap:
-    out.append(d.isoformat()); d += dt.timedelta(days=1)
-if not out:
-    print(today)
-else:
-    print("\n".join(out))
+print("\n".join((t - dt.timedelta(days=k)).isoformat() for k in range(cap, -1, -1)))
 PY
 )
 
