@@ -19,11 +19,25 @@ if ! mkdir "$LOCKDIR" 2>/dev/null; then
 fi
 cd "$REPO" || { rmdir "$LOCKDIR"; exit 1; }
 
+# Пуш с таймаутом и одним ретраем: зависший git push иначе стопорит весь прогон
+push_safe() {
+    local attempt
+    for attempt in 1 2; do
+        if git -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=45 \
+               -c http.postBuffer=524288000 push -q origin main 2>>"$LOG"; then
+            return 0
+        fi
+        echo "$(date +%F\ %T) push не прошёл (попытка $attempt), повтор" >> "$LOG"
+        sleep 10
+    done
+    return 1
+}
+
 TMP=$(mktemp -d /tmp/cc.XXXXXX) || exit 1
 trap 'rm -rf "$TMP"; rmdir "$LOCKDIR" 2>/dev/null' EXIT
 
-git fetch -q origin main 2>>"$LOG" || true
-git pull --rebase --autostash -q origin main 2>>"$LOG" || true
+git -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=45 fetch -q origin main 2>>"$LOG" || true
+git -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=45 pull --rebase --autostash -q origin main 2>>"$LOG" || true
 
 TODAY=$(date +%Y-%m-%d)
 
@@ -95,10 +109,10 @@ PY
         GIT_AUTHOR_EMAIL="$AUTHOR" GIT_COMMITTER_EMAIL="$AUTHOR" \
           GIT_AUTHOR_DATE="$date" GIT_COMMITTER_DATE="$date" \
           git commit -q -m "$msg" || true
-        if [ $((j % 25)) -eq 0 ]; then git push -q origin main 2>>"$LOG" || true; fi
+        if [ $((j % 25)) -eq 0 ]; then push_safe || true; fi
     done < "$TMP/dates.txt"
 
-    git push -q origin main 2>>"$LOG" || true
+    push_safe || true
     echo "$(date +%F\ %T) OK $day: +$NEED (было $CNT)" >> "$LOG"
     WORKED=$((WORKED + NEED))
 done
