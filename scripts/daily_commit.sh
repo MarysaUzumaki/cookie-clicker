@@ -90,7 +90,9 @@ if start >= end:
     start = d.replace(hour=23, minute=0); end = d.replace(hour=23, minute=58)
 rows = [json.loads(l) for l in open(tmp + "/c.jsonl", encoding="utf-8").read().splitlines()]
 rows.sort(key=lambda o: (o["value"], o["id"]))
-base = int(rows[0]["id"])
+# base — минимальный id партии: после сортировки по value первая строка
+# не обязана иметь наименьший id, и base = rows[0]["id"] давал накладки id
+base = min(int(o["id"]) for o in rows)
 for j, o in enumerate(rows):
     o["id"] = str(base + j)
 open(tmp + "/c.jsonl", "w", encoding="utf-8").write("\n".join(json.dumps(o, ensure_ascii=False) for o in rows) + "\n")
