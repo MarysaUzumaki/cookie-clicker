@@ -9,4 +9,5 @@ Thumbs.db
 __pycache__/
 *.pyc
 venv/
-.venv/
+.venv/.daily.log
+.daily.lock/
