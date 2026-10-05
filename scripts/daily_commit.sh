@@ -10,7 +10,7 @@ REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LOCKDIR="$REPO/.daily.lock"
 LOG="$REPO/.daily.log"
 TARGET="${TARGET:-140}"
-MAX_BACKFILL_DAYS="${MAX_BACKFILL_DAYS:-7}"
+MAX_BACKFILL_DAYS="${MAX_BACKFILL_DAYS:-14}"
 AUTHOR="149891978+MarysaUzumaki@users.noreply.github.com"
 
 if ! mkdir "$LOCKDIR" 2>/dev/null; then
